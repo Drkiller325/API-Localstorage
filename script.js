@@ -2,6 +2,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const movieInput = document.getElementById('Task-input');
     const addMovieButton = document.getElementById('add-task');
     const movieList = document.getElementById('Task-list');
+    const themeToggleButton = document.getElementById('theme-toggle');
+    const body = document.body;
+
+    // Load movies from local storage
+    const movies = JSON.parse(localStorage.getItem('movies')) || [];
+
+    // Load theme from local storage
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-theme');
+    }
 
     // Load movies from local storage
     const movies = JSON.parse(localStorage.getItem('movies')) || [];
@@ -29,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('movies', JSON.stringify(movies));
     };
 
+
     // Add movie
     addMovieButton.addEventListener('click', () => {
         const movieName = movieInput.value.trim();
@@ -53,6 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
             saveMovies();
             renderMovies();
         }
+    });
+
+    // Toggle theme
+    themeToggleButton.addEventListener('click', () => {
+        body.classList.toggle('dark-theme');
+        const theme = body.classList.contains('dark-theme') ? 'dark' : 'light';
+        localStorage.setItem('theme', theme);
     });
 
     // Initial render

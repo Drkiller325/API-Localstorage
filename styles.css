@@ -9,6 +9,11 @@ body {
     margin: 0;
 }
 
+body.dark-theme {
+    background-color: #121212;
+    color: white;
+}
+
 .container {
     background: white;
     padding: 20px;
@@ -16,6 +21,11 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 300px;
     text-align: center;
+}
+
+body.dark-theme .container {
+    background: #1e1e1e;
+    color: white;
 }
 
 input[type="text"] {
@@ -26,17 +36,32 @@ input[type="text"] {
     border-radius: 4px;
 }
 
+body.dark-theme input[type="text"] {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+}
+
 button {
     padding: 10px 20px;
     border: none;
     background: #007bff;
     color: white;
+
     border-radius: 4px;
     cursor: pointer;
 }
 
+body.dark-theme button {
+    background: #0056b3;
+}
+
 button:hover {
     background: #0056b3;
+}
+
+body.dark-theme button:hover {
+    background: #003d80;
 }
 
 ul {
@@ -55,11 +80,21 @@ li {
     align-items: center;
 }
 
+
+body.dark-theme li {
+    background: #333;
+    border: 1px solid #555;
+}
+
 .like-button {
     background: none;
     border: none;
     cursor: pointer;
     color: #007bff;
+}
+
+body.dark-theme .like-button {
+    color: #ff6b6b;
 }
 
 .like-button.liked {
