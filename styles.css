@@ -1,0 +1,11 @@
+/* Light Theme (default) */
+body {
+    background-color: white;
+    color: black;
+}
+
+/* Dark Theme */
+body.dark-theme {
+    background-color: #121212;
+    color: white;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Local Storage Example</title>
+  </head>
+  <body>
+    <h1>Local Storage Example</h1>
+    <input type="text" id="username" placeholder="Enter your username" />
+    <button onclick="saveUsername()">Save Username</button>
+    <button onclick="loadUsername()">Load Username</button>
+    <button onclick="clearUsername()">Clear Username</button>
+
+    <p id="displayUsername"></p>
+
+    <button id="theme-toggle">Toggle Theme</button>
+    <h1>Welcome to My Website</h1>
+    <p>This is a sample website with dark theme support.</p>
+
+    <script src="script.js"></script>
+
+    <script>
+      function saveUsername() {
+        var username = document.getElementById("username").value;
+        localStorage.setItem("username", username);
+        alert("Username saved!");
+      }
+
+      function loadUsername() {
+        var username = localStorage.getItem("username");
+        if (username) {
+          document.getElementById("displayUsername").innerText =
+            "Saved Username: " + username;
+        } else {
+          document.getElementById("displayUsername").innerText =
+            "No username saved.";
+        }
+      }
+
+      function clearUsername() {
+        localStorage.removeItem("username");
+        document.getElementById("displayUsername").innerText = "";
+        alert("Username cleared!");
+      }
+    </script>
+  </body>
+</html>
