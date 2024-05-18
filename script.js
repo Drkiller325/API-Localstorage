@@ -1,22 +1,60 @@
-document.addEventListener('DOMContentLoaded', (event) => {
-    const themeToggle = document.getElementById('theme-toggle');
+document.addEventListener('DOMContentLoaded', () => {
+    const movieInput = document.getElementById('Task-input');
+    const addMovieButton = document.getElementById('add-task');
+    const movieList = document.getElementById('Task-list');
 
-    // Load the saved theme from local storage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        document.body.classList.add(savedTheme);
-    }
+    // Load movies from local storage
+    const movies = JSON.parse(localStorage.getItem('movies')) || [];
 
-    // Toggle theme on button click
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
+    // Render movies
+    const renderMovies = () => {
+        movieList.innerHTML = '';
+        movies.forEach((movie, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${movie.name}
+                <div>
+                    <button class="like-button ${movie.liked ? 'liked' : ''}" data-index="${index}">
+                        ${movie.liked ? '✅' : '✅︎'}
+                    </button>
+                    <button class="delete-button" data-index="${index}">❌</button>
+                </div>
+            `;
+            movieList.appendChild(li);
+        });
+    };
 
-        // Save the current theme in local storage
-        if (document.body.classList.contains('dark-theme')) {
-            localStorage.setItem('theme', 'dark-theme');
-        } else {
-            localStorage.removeItem('theme');
+    // Save movies to local storage
+    const saveMovies = () => {
+        localStorage.setItem('movies', JSON.stringify(movies));
+    };
+
+    // Add movie
+    addMovieButton.addEventListener('click', () => {
+        const movieName = movieInput.value.trim();
+        if (movieName) {
+            movies.push({ name: movieName, liked: false });
+            movieInput.value = '';
+            saveMovies();
+            renderMovies();
         }
     });
-});
 
+    // Handle movie list clicks
+    movieList.addEventListener('click', (event) => {
+        if (event.target.classList.contains('like-button')) {
+            const index = event.target.getAttribute('data-index');
+            movies[index].liked = !movies[index].liked;
+            saveMovies();
+            renderMovies();
+        } else if (event.target.classList.contains('delete-button')) {
+            const index = event.target.getAttribute('data-index');
+            movies.splice(index, 1);
+            saveMovies();
+            renderMovies();
+        }
+    });
+
+    // Initial render
+    renderMovies();
+});
