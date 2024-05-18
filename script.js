@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
         body.classList.add('dark-theme');
     }
 
+    // Load movies from local storage
+    const movies = JSON.parse(localStorage.getItem('movies')) || [];
+
     // Render movies
     const renderMovies = () => {
         movieList.innerHTML = '';
@@ -36,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveMovies = () => {
         localStorage.setItem('movies', JSON.stringify(movies));
     };
+
 
     // Add movie
     addMovieButton.addEventListener('click', () => {

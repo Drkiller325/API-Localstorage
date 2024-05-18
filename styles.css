@@ -47,6 +47,7 @@ button {
     border: none;
     background: #007bff;
     color: white;
+
     border-radius: 4px;
     cursor: pointer;
 }
@@ -78,6 +79,7 @@ li {
     justify-content: space-between;
     align-items: center;
 }
+
 
 body.dark-theme li {
     background: #333;
