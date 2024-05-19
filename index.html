@@ -3,16 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task manager</title>
+    <title>Task Manager</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="container">
       <h1>Task Manager</h1>
       <button id="theme-toggle">Toggle Theme</button>
-      <input type="text" id="Task-input" placeholder="Enter Task" />
+      <input type="text" id="task-input" placeholder="Enter Task" />
+      <select id="category-select">
+        <option value="work">Work</option>
+        <option value="personal">Personal</option>
+        <option value="hobby">Hobby</option>
+      </select>
       <button id="add-task">Add Task</button>
-      <ul id="Task-list"></ul>
+      <ul id="task-list"></ul>
     </div>
     <script src="script.js"></script>
   </body>

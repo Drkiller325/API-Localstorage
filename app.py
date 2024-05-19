@@ -50,7 +50,12 @@ def add_task():
         return jsonify({"msg": "Permission denied"}), 403
 
     data = request.get_json()
-    task = {"id": len(tasks) + 1, "name": data['name'], "completed": False}
+    task_name = data.get('name')
+    task_category = data.get('category')  # New: Get category from request
+    if not task_name or not task_category:
+        return jsonify({"msg": "Task name and category are required"}), 400
+
+    task = {"id": len(tasks) + 1, "name": task_name, "category": task_category, "completed": False}
     tasks.append(task)
     return jsonify(task), 201
 
@@ -66,6 +71,7 @@ def update_task(task_id):
     for task in tasks:
         if task['id'] == task_id:
             task['name'] = data.get('name', task['name'])
+            task['category'] = data.get('category', task['category'])  # New: Update category
             task['completed'] = data.get('completed', task['completed'])
             return jsonify(task)
     return jsonify({"msg": "Task not found"}), 404

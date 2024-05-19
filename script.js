@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const taskInput = document.getElementById('Task-input');
+    const taskInput = document.getElementById('task-input');
     const addTaskButton = document.getElementById('add-task');
-    const taskList = document.getElementById('Task-list');
+    const taskList = document.getElementById('task-list');
+    const categorySelect = document.getElementById('category-select');
     const themeToggleButton = document.getElementById('theme-toggle');
     const body = document.body;
 
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tasks.forEach((task, index) => {
             const li = document.createElement('li');
             li.innerHTML = `
-                ${task.name}
+                ${task.name} - <strong>${task.category}</strong>
                 <div>
                     <button class="like-button ${task.completed ? 'liked' : ''}" data-index="${index}">
                         ${task.completed ? '✅' : '✅︎'}
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     addTaskButton.addEventListener('click', async () => {
         const taskName = taskInput.value.trim();
+        const category = categorySelect.value;
         if (taskName) {
             await fetch('http://localhost:5000/api/tasks', {
                 method: 'POST',
@@ -51,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ name: taskName }),
+                body: JSON.stringify({ name: taskName, category: category }),
             });
             taskInput.value = '';
             fetchTasks();
