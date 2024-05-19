@@ -1,76 +1,100 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const movieInput = document.getElementById('Task-input');
-    const addMovieButton = document.getElementById('add-task');
-    const movieList = document.getElementById('Task-list');
+    const taskInput = document.getElementById('Task-input');
+    const addTaskButton = document.getElementById('add-task');
+    const taskList = document.getElementById('Task-list');
     const themeToggleButton = document.getElementById('theme-toggle');
     const body = document.body;
 
-    // Load theme from local storage
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-theme');
-    }
+    let token = '';
 
-    // Load movies from local storage
-    const movies = JSON.parse(localStorage.getItem('movies')) || [];
+    const login = async () => {
+        const response = await fetch('http://localhost:5000/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: 'admin', password: 'password' }),
+        });
+        const data = await response.json();
+        token = data.access_token;
+    };
 
-    // Render movies
-    const renderMovies = () => {
-        movieList.innerHTML = '';
-        movies.forEach((movie, index) => {
+    const fetchTasks = async () => {
+        const response = await fetch('http://localhost:5000/api/tasks', {
+            headers: { 'Authorization': `Bearer ${token}` },
+        });
+        const tasks = await response.json();
+        renderTasks(tasks);
+    };
+
+    const renderTasks = (tasks) => {
+        taskList.innerHTML = '';
+        tasks.forEach((task, index) => {
             const li = document.createElement('li');
             li.innerHTML = `
-                ${movie.name}
+                ${task.name}
                 <div>
-                    <button class="like-button ${movie.liked ? 'liked' : ''}" data-index="${index}">
-                        ${movie.liked ? '✅' : '✅︎'}
+                    <button class="like-button ${task.completed ? 'liked' : ''}" data-index="${index}">
+                        ${task.completed ? '✅' : '✅︎'}
                     </button>
                     <button class="delete-button" data-index="${index}">❌</button>
                 </div>
             `;
-            movieList.appendChild(li);
+            taskList.appendChild(li);
         });
     };
 
-    // Save movies to local storage
-    const saveMovies = () => {
-        localStorage.setItem('movies', JSON.stringify(movies));
-    };
-
-
-    // Add movie
-    addMovieButton.addEventListener('click', () => {
-        const movieName = movieInput.value.trim();
-        if (movieName) {
-            movies.push({ name: movieName, liked: false });
-            movieInput.value = '';
-            saveMovies();
-            renderMovies();
+    addTaskButton.addEventListener('click', async () => {
+        const taskName = taskInput.value.trim();
+        if (taskName) {
+            await fetch('http://localhost:5000/api/tasks', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ name: taskName }),
+            });
+            taskInput.value = '';
+            fetchTasks();
         }
     });
 
-    // Handle movie list clicks
-    movieList.addEventListener('click', (event) => {
+    taskList.addEventListener('click', async (event) => {
+        const index = event.target.getAttribute('data-index');
+        const response = await fetch('http://localhost:5000/api/tasks', {
+            headers: { 'Authorization': `Bearer ${token}` },
+        });
+        const tasks = await response.json();
+
         if (event.target.classList.contains('like-button')) {
-            const index = event.target.getAttribute('data-index');
-            movies[index].liked = !movies[index].liked;
-            saveMovies();
-            renderMovies();
+            const task = tasks[index];
+            task.completed = !task.completed;
+            await fetch(`http://localhost:5000/api/tasks/${task.id}`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ completed: task.completed }),
+            });
+            fetchTasks();
         } else if (event.target.classList.contains('delete-button')) {
-            const index = event.target.getAttribute('data-index');
-            movies.splice(index, 1);
-            saveMovies();
-            renderMovies();
+            const task = tasks[index];
+            await fetch(`http://localhost:5000/api/tasks/${task.id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+            fetchTasks();
         }
     });
 
-    // Toggle theme
     themeToggleButton.addEventListener('click', () => {
         body.classList.toggle('dark-theme');
         const theme = body.classList.contains('dark-theme') ? 'dark' : 'light';
         localStorage.setItem('theme', theme);
     });
 
-    // Initial render
-    renderMovies();
+    (async () => {
+        await login();
+        fetchTasks();
+    })();
 });
