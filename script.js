@@ -4,15 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskList = document.getElementById('task-list');
     const categorySelect = document.getElementById('category-select');
     const themeToggleButton = document.getElementById('theme-toggle');
+    const clientRoleButton = document.getElementById('client-role');
+    const adminRoleButton = document.getElementById('admin-role');
     const body = document.body;
 
     let token = '';
+    let currentRole = 'client'; // default role
 
-    const login = async () => {
+    const login = async (username, password) => {
         const response = await fetch('http://localhost:5000/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username: 'admin', password: 'password' }),
+            body: JSON.stringify({ username, password }),
         });
         const data = await response.json();
         token = data.access_token;
@@ -95,8 +98,25 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('theme', theme);
     });
 
-    (async () => {
-        await login();
+    clientRoleButton.addEventListener('click', async () => {
+        currentRole = 'client';
+        await login('visitor', 'visit'); // Replace with actual credentials
         fetchTasks();
+    });
+
+    adminRoleButton.addEventListener('click', async () => {
+        currentRole = 'admin';
+        await login('admin', 'password');
+        fetchTasks();
+    });
+
+    // Load initial role and theme
+    (async () => {
+        await login('client', 'client_password'); // Default to client role on load
+        fetchTasks();
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        if (savedTheme === 'dark') {
+            body.classList.add('dark-theme');
+        }
     })();
 });
