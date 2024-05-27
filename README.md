@@ -8,10 +8,12 @@ For Api Documentation and visualization i Used Swagger library as seen here:
 As you can see i have an Authoriziation login and register request that i use to save the users credentials and for password and site safty i generate a JW token for verification
 as well as the 4 CRUD Functions which are 
 1. Create: in this case we have a post request that adds a Task in the app:
+
 ![image](https://github.com/Drkiller325/API-Localstorage/assets/90339098/82740388-d01d-40d4-ae50-5aef0b54dc21)
+
 as you can see in the frontend side we have an admin and a client which have different permessions accordingly
 
-2. Read: any user can see the currently created tasks by sending a simple get request
+3. Read: any user can see the currently created tasks by sending a simple get request
 ![image](https://github.com/Drkiller325/API-Localstorage/assets/90339098/b4b5636f-bac9-44ba-9a3e-28c46c5ae5df)
 
 
